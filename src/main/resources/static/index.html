@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta
+	content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+	name="viewport" />
+<meta name="apple-mobile-web-app-capable" content="no" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<link rel="icon" href="/static/fff.ico" mce_href="/static/fff.ico"
+	type="image/x-icon">
+<title>汉语识字</title>
+<script type="text/javascript">
+
+   var currentId = 0;
+
+	function next() {
+		$.get("/get", function(data, status) {
+			if(!data) {
+				return;
+			}
+			$("#c").html(data.c);
+			currentId = data.id;
+			$("#v").attr(
+					"src",
+					'https://hanyu-word-pinyin-short.cdn.bcebos.com/' + data.v
+							+ '.mp3');
+
+		});
+	}
+
+	$(function() {
+		next();
+	});
+	function playVoice() {
+		document.getElementById("v").play();
+	}
+	$(function() {
+		$("#header span.right").on("click", function() {
+			var val = $(this).attr('class');
+			if (val.indexOf('on') == -1) {
+				$(this).addClass('on');
+				$(".menu").show(0).stop().animate({
+					height : '0.8rem'
+				}, 0);
+			} else {
+				$(this).removeClass('on');
+				$(".menu").hide(0).stop().animate({
+					height : '0'
+				}, 0);
+			}
+		})
+
+		$(".menu a").on("click", function() {
+			$(this).parents(".menu").hide();
+			$("#header span.right").removeClass('on');
+		})
+
+	});
+
+	function favorite() {
+		$.get("/favorite/"+currentId, function(data, status) {
+		});
+	}
+	function switchs() {
+		$.get("/switchs", function(data, status) {
+			next();
+		});
+	}
+</script>
+<style type="text/css">
+body {
+	background-color: #ffe1e1;
+}
+
+.charactor {
+	text-align: center;
+	display: block;
+	color: rgb(128, 128, 64);
+	font-size: 365.3px;
+	font-style: normal;
+	font-family: 微软雅黑;
+	font-weight: 400;
+	text-decoration: none;
+}
+
+.imgspan {
+	text-align: center;
+	display: block;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#header {
+	text-align: center;
+	height: 0.34rem;
+	line-height: 0.34rem;
+	color: #fff;
+	position: relative;
+}
+
+#header span.right {
+	width: 0.34rem;
+	height: 0.34rem;
+	position: absolute;
+	right: 0;
+	top: 0;
+	background: url("/static/btn.jpg") no-repeat center center;
+	background-size: 80%;
+	transform: rotate(0deg);
+	-ms-transform: rotate(0deg); /* IE 9 */
+	-moz-transform: rotate(0deg); /* Firefox */
+	-webkit-transform: rotate(0deg); /* Safari 和 Chrome */
+	-o-transform: rotate(0deg);
+	-webkit-transition: all 0.3s linear;
+	-ms-transition: all 0.3s linear;
+	-moz-transition: all 0.3s linear;
+	-o-transition: all 0.3s linear;
+	transition: all 0.3s linear;
+}
+
+#header span.right.on {
+	background: url("/static/btn.png") no-repeat center center;
+	background-size: 55%;
+	transform: rotate(135deg);
+	-ms-transform: rotate(135deg); /* IE 9 */
+	-moz-transform: rotate(135deg); /* Firefox */
+	-webkit-transform: rotate(135deg); /* Safari 和 Chrome */
+	-o-transform: rotate(135deg);
+	-webkit-transition: all 0.3s linear;
+	-ms-transition: all 0.3s linear;
+	-moz-transition: all 0.3s linear;
+	-o-transition: all 0.3s linear;
+	transition: all 0.3s linear;
+}
+
+#header h1 {
+	font-size: 0.16rem;
+	font-weight: normal;
+}
+
+#header span.left {
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: block;
+	width: 0.34rem;
+	height: 0.34rem;
+	font-size: 0.14rem;
+	padding-left: 0.08rem;
+}
+
+.menu {
+	overflow: hidden;
+	background-color: #7db8d2;
+	width: 20%;
+	position: absolute;
+	right: 0;
+	top: 0.34rem;
+	right: 0;
+	z-index: 9999;
+	height: 0;
+	-webkit-transition: all 0.3s linear;
+	-ms-transition: all 0.3s linear;
+	-moz-transition: all 0.3s linear;
+	-o-transition: all 0.3s linear;
+	transition: all 0.3s linear;
+}
+
+.menu li {
+	width: 100%;
+	text-align: center;
+	border-bottom: 0.01rem solid #0097da;
+	font-size: 0.16rem;
+	height: 0.4rem;
+	line-height: 0.4rem;
+}
+
+.menu li a {
+	color: #fff;
+	display: inline-block;
+	width: 100%;
+	text-align: center;
+	text-decoration: none;
+}
+</style>
+</head>
+
+<body>
+	<!-- 代码 开始 -->
+	<header id="header">
+		<span class="right"></span>
+	</header>
+	<div class="menu">
+		<ul>
+			<li><a href="javascript:favorite()">收藏</a></li>
+			<li><a href="javascript:switchs()">切换</a></li>
+		</ul>
+	</div>
+</head>
+<div
+	style="text-align: center; margin: 5px 0; font: normal 14px/24px 'MicroSoft YaHei';"></div>
+<div id="c" onclick="next()" class="charactor"></div>
+<audio id="v"
+	src="https://hanyu-word-pinyin-short.cdn.bcebos.com/yi1.mp3"></audio>
+<span class="imgspan"> <img alt=""
+	src="/static/sound_72px_25964_easyicon.net.ico" width="20%"
+	onclick="playVoice()" />
+</span>
+</body>
+<script>
+	var fontSize = 100;
+	var elm = document.documentElement;
+	elm.style.fontSize = fontSize * (elm.clientWidth / 320) + 'px';
+</script>
+</html>
