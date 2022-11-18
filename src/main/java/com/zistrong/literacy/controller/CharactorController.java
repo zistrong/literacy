@@ -27,6 +27,11 @@ public class CharactorController {
         return "v";
     }
 
+    @GetMapping("/")
+    public String index() {
+        return "redirect:static/index.html";
+    }
+
     @ResponseBody
     @GetMapping("get")
     public Charactor get() {
